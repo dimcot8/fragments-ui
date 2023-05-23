@@ -1,5 +1,6 @@
 {
   "name": "fragments-ui",
+  "source": "src/index.html",
   "private": true,
   "version": "0.0.1",
   "description": "Fragments UI testing web app",
@@ -7,7 +8,6 @@
   "scripts": {
     "start": "parcel",
     "build": "parcel build",
-
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -123,6 +123,8 @@
   },
   "keywords": [],
   "devDependencies": {
-    "parcel": "^2.8.3"
+    "parcel": "latest",
+    "process": "^0.11.10",
+    "querystring-es3": "^0.2.1"
   }
 }
