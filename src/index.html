@@ -14,5 +14,48 @@
     <section hidden id="user">
       <h2>Hello <span class="username"></span>!</h2>
     </section>
+
+    <section hidden id="post-section">
+      <h3>Post a fragment</h3>
+      <div>
+        <span style="display: inline-block">Fragment ID: </span>
+        <span style="display: inline-block"><input type="text" id="frag-id" /></span>
+      </div>
+      <div>
+        <span style="display: inline-block; margin-bottom: 5px;">Content: </span>
+        <span style="display: inline-block">
+          <input type="text" id="inputfragment" style="margin-top: 10px" />
+        </span>
+
+        <span style="display: inline-block"
+          ><select
+            id="fragmentType"
+            style=" border: 1px solid"
+          >
+            <option value="">Select type</option>
+            <option value="text/plain">text/plain</option>
+          </select>
+        </span>
+      </div>
+      <input type="file" id="file-input" style="margin-top: 5px; padding-left: 5px" />
+
+      <button id="post-btn" style="margin: 0">Post</button>
+    </section>
+
+
+    <section hidden  id="get-section">
+      <section>
+        <h3 style="margin-top: 10 px">Get a list of all your fragments</h3>
+        <button id="get-fragments-btn" style="display: inline-block">
+          Get fragments
+        </button>
+
+        <h3 style="margin-top: 15px">Get a fragments' information by ID</h3>
+      <span style="display: inline-block">Fragment ID: </span>
+      <span style="display: inline-block"><input type="text" id="fragment-id" /></span>
+
+      <button id="get-fragment-btn">Get fragment</button>
+      </section>
+
   </body>
 </html>
