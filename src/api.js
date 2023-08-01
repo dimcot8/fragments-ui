@@ -18,7 +18,6 @@ export async function getUserFragments(user, expand) {
       // Generate headers with the proper Authorization bearer token to pass
       headers: user.authorizationHeaders(),
     });
-
     if (!res.ok) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
@@ -30,23 +29,115 @@ export async function getUserFragments(user, expand) {
 }
 
 
+export async function getFragment(user, id, ext, info) {
+  console.log('Requesting a single fragment...');
+
+  let data;
+  try {
+    let url = `${apiUrl}/v1/fragments/${id}${ext}`;
+    if (info) url += '/info';
+    const res = await fetch(url, {
+      headers: user.authorizationHeaders(),
+    });
+
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+
+    if (info) data = await res.json();
+    else data = await res.text();
+    console.log('Got user fragment data', { data });
+  } catch (err) {
+    console.error('Unable to call GET /v1/fragments/:id', { err });
+  }
+}
 
 
 export async function getFragmentInfo(user, id) {
-  console.log('Requesting fragment info...');
+  console.log('Requesting fragments\' info...');
   try {
-    const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
+   
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}/info`, {
       headers: user.authorizationHeaders(),
-    });
+      
+    }); 
+
+
     if (res.status === 404) {
       throw new Error(`${res.status} ${res.statusText}`);
     }
-    const data = await res.json();
-    console.log('Got user fragment info', { data});
+    const contentType = res.headers.get('Content-Type');
+    let data;
+
+    if (contentType.includes('application/json')) {
+      data = await res.json();
+    } else if (contentType.includes('text/html') || contentType.includes('text/markdown')
+     || contentType.includes('text/plain')) {
+      data = await res.text();
+    } else {
+      data = await res.text();
+    }
+    console.log('Got user fragment\' info!', {data});
   } catch (err) {
     console.error(`Unable to call GET /v1/fragments/${id}`, { err });
   }
 }
+
+
+
+
+
+
+
+
+export async function getFragmentData(user, id, ext) {
+  console.log('Requesting fragments\' data...');
+  let data;
+
+  const container = document.querySelector('#data');
+  container.textContent = '';
+
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}${ext}`, {
+      headers: user.authorizationHeaders(),
+    });
+
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+
+    const contentType = res.headers.get('Content-Type');
+
+    if (contentType === 'application/json') {
+
+      data = await res.json();
+      container.textContent = JSON.stringify(data);
+    } else if (contentType.includes('markdown')) {
+      data = await res.text();
+      container.textContent = data;
+    } else if (contentType.includes('html')) {
+      data = await res.text();
+
+      container.insertAdjacentHTML('beforeend', data);
+
+    } else {
+      data = await res.text();
+
+      container.textContent = data;
+    }
+
+    console.log('Got user fragment data', { data });
+  } catch (err) {
+    console.error(`Unable to call GET /v1/fragments/${id}`, { err });
+  }
+}
+
+
+
+
+
+
+
 
 
 export async function postFragment(user, fragment, type) {

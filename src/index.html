@@ -34,6 +34,9 @@
           >
             <option value="">Select type</option>
             <option value="text/plain">text/plain</option>
+            <option value="text/markdown">text/markdown</option>
+            <option value="text/html">text/html</option>
+            <option value="application/json">application/json</option>
           </select>
         </span>
       </div>
@@ -42,19 +45,54 @@
       <button id="post-btn" style="margin: 0">Post</button>
     </section>
 
-
     <section hidden  id="get-section">
       <section>
         <h3 style="margin-top: 10 px">Get a list of all your fragments</h3>
         <button id="get-fragments-btn" style="display: inline-block">
           Get fragments
         </button>
-
+      </br>
+    </br>
         <h3 style="margin-top: 15px">Get a fragments' information by ID</h3>
       <span style="display: inline-block">Fragment ID: </span>
       <span style="display: inline-block"><input type="text" id="fragment-id" /></span>
 
-      <button id="get-fragment-btn">Get fragment</button>
+      <button id="get-fragment-btn">Get the fragment</button>
+
+      </br>
+    </br>
+
+      <section>
+        <h3 style="margin-top: 0; margin-bottom: 5px">Convert fragment</h3>
+        <div style="margin-top: 5px">
+          <span style="display: inline-block">Fragment ID: </span>
+          <span style="display: inline-block"><input type="text" id="fragment-id2" /></span>
+          <span style="display: inline-block"
+            ><select
+              name="convert-type"
+              id="convert-type"
+              style="border: 1px solid white"
+            >
+              <option value="">Convert to</option>
+              <option value=".txt">text/plain</option>
+              <option value=".md">text/markdown</option>
+              <option value=".html">text/html</option>
+              <option value=".json">application/json</option>
+            </select>
+          </span>
+        </div>
+        <div style="margin-top: 15px">
+          <button id="get-data-btn">Get data</button>
+          <button id="get-info-btn">Get info</button>
+        </div>
+        <div>
+        </br>
+        <h3 id="fragm-data">Fragment data:</h3>
+        <div id="data"></div>
+      </div>
+
+      </section>
+
       </section>
 
   </body>

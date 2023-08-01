@@ -1,11 +1,11 @@
 // src/app.js
 
 import { Auth, getUser } from './auth';
-import { getFragmentData, getUserFragments } from './api';
 import {
   getUserFragments,
   postFragment,
-  getFragmentInfo
+  getFragmentInfo,
+  getFragmentData
 
 } from './api';
 
@@ -23,7 +23,15 @@ async function init() {
   const getFragmentsBtn = document.querySelector('#get-fragments-btn');
   const fragmentId = document.querySelector('#fragment-id');
   const fragmentInput = document.querySelector('#inputfragment');
+  const fragmentConvertId = document.querySelector('#fragment-id2');
 
+  const getDataBtn = document.querySelector('#get-data-btn');
+  const convertType = document.querySelector('#convert-type');
+
+  const getInfoBtn2 = document.querySelector('#get-info-btn');
+  const fragmData = document.querySelector("#fragm-data");
+
+  fragmData.style.display = 'none';
 
   // Wire up event handlers to deal with login and logout.
   loginBtn.onclick = () => {
@@ -64,10 +72,30 @@ async function init() {
 
   getUserFragments(user);
 
+  getInfoBtn2.addEventListener('click', () => {
+    if (fragmentConvertId.value === '') alert("Fragment ID can't be blank!");
+    else getFragmentInfo(user, fragmentConvertId.value);
+  });
+  getDataBtn.addEventListener('click', () => {
+    if (fragmentConvertId.value === '') alert("Fragment ID can't be blank.");
+    else getFragmentData(user, fragmentConvertId.value, convertType.value);
+    fragmData.style.display = 'block';
+  });
+  function extToType(ext) {
+    const extensions = ['txt', 'md', 'html', 'json'];
+    const types = [
+      'text/plain',
+      'text/markdown',
+      'text/html',
+      'application/json'
+    ];
+    const index = extensions.findIndex((extension) => extension === ext);
+    return types[index];
+  }
+  
   getFragmentsBtn.addEventListener('click', () => {
     getUserFragments(user, true);
   });
-
   postBtn.onclick = () => {
     if (fragmentType.value === '') {
       alert('Please select a type');
@@ -78,24 +106,26 @@ async function init() {
       const file = fileInput.files[0];
       const name = file.name;
       var ext = name.substr(name.lastIndexOf('.') + 1, name.length);
-  
-  
+      if (extToType(ext) !== fragmentType.value) {
+        alert('Please choose a file of selected type');
+        return;
+      }
+
       const reader = new FileReader();
       reader.onload = (e) => {
         const fileData = e.target.result;
         postFragment(user, fileData, fragmentType.value);
       };
       reader.readAsText(file);
-  
       return;
     }
   
-    if (fragmentInput === '') alert('Please enter a fragment');
+    if (fragmentInput === '') alert('Please enter a fragment!');
     else postFragment(user, fragmentInput, fragmentType);
   };
 
   getInfoBtn.addEventListener('click', () => {
-    if (fragmentId.value === '' || fragmentId.value === null) alert("Fragment ID can't be blank.");
+    if (fragmentId.value === '' || fragmentId.value === null) alert("Fragment ID can't be blank!");
     else getFragmentInfo(user, fragmentId.value);
   });
 
