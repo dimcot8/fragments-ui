@@ -32,17 +32,22 @@
             id="fragmentType"
             style=" border: 1px solid"
           >
-            <option value="">Select type</option>
-            <option value="text/plain">text/plain</option>
-            <option value="text/markdown">text/markdown</option>
-            <option value="text/html">text/html</option>
-            <option value="application/json">application/json</option>
+          <option value="">Select type</option>
+          <option value="application/json">application/json</option>
+          <option value="text/html">text/html</option>
+          <option value="text/markdown">text/markdown</option>
+          <option value="text/plain">text/plain</option>
+          <option value="image/png">image/png</option>
+          <option value="image/jpeg">image/jpeg</option>
+          <option value="image/gif">image/gif</option>
+          <option value="image/webp">image/webp</option>
           </select>
         </span>
       </div>
       <input type="file" id="file-input" style="margin-top: 5px; padding-left: 5px" />
-
       <button id="post-btn" style="margin: 0">Post</button>
+      <button id="update-btn" style="margin: 5px;">Update</button>
+
     </section>
 
     <section hidden  id="get-section">
@@ -73,22 +78,29 @@
               id="convert-type"
               style="border: 1px solid white"
             >
-              <option value="">Convert to</option>
-              <option value=".txt">text/plain</option>
-              <option value=".md">text/markdown</option>
-              <option value=".html">text/html</option>
-              <option value=".json">application/json</option>
+            <option value="">Convert to</option>
+            <option value=".txt">text/plain</option>
+            <option value=".md">text/markdown</option>
+            <option value=".html">text/html</option>
+            <option value=".json">application/json</option>
+            <option value=".png">image/png</option>
+            <option value=".jpeg">image/jpeg</option>
+            <option value=".gif">image/gif</option>
+            <option value=".webp">image/webp</option>
             </select>
           </span>
         </div>
         <div style="margin-top: 15px">
           <button id="get-data-btn">Get data</button>
           <button id="get-info-btn">Get info</button>
+          <button id="delete-btn">Delete</button>
         </div>
         <div>
         </br>
         <h3 id="fragm-data">Fragment data:</h3>
         <div id="data"></div>
+        <img id="image" />
+
       </div>
 
       </section>

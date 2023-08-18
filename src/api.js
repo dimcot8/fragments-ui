@@ -52,7 +52,30 @@ export async function getFragment(user, id, ext, info) {
   }
 }
 
+export async function updateFragment(user, id, fragment, type) {
+  console.log('Updating user fragment data...');
 
+  try {
+    if (type == 'application/json') {
+      fragment = JSON.parse(JSON.stringify(fragment).replace(/\\n/g, '').replace(/ /g, ''));
+    }
+
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${user.idToken}`,
+        'Content-Type': type,
+      },
+      body: fragment,
+    });
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+    console.log('User fragment data updated', { fragment });
+  } catch (err) {
+    console.error(`Unable to call PUT /v1/fragment/${id}`, err);
+  }
+}
 export async function getFragmentInfo(user, id) {
   console.log('Requesting fragments\' info...');
   try {
@@ -86,7 +109,24 @@ export async function getFragmentInfo(user, id) {
 
 
 
+export async function deleteFragment(user, id) {
+  console.log('Deleting user fragment...');
 
+  try {
+    const res = await fetch(`${apiUrl}/v1/fragments/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${user.idToken}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`${res.status} ${res.statusText}`);
+    }
+    console.log('Deleted fragment ' + id);
+  } catch (err) {
+    console.error(`Unable to call DELETE /v1/fragment/${id}`, { err });
+  }
+}
 
 
 
@@ -95,8 +135,10 @@ export async function getFragmentData(user, id, ext) {
   let data;
 
   const container = document.querySelector('#data');
-  container.textContent = '';
+  const image = document.querySelector('#image');
 
+  container.textContent = '';
+  image.src = '';
   try {
     const res = await fetch(`${apiUrl}/v1/fragments/${id}${ext}`, {
       headers: user.authorizationHeaders(),
@@ -109,20 +151,20 @@ export async function getFragmentData(user, id, ext) {
     const contentType = res.headers.get('Content-Type');
 
     if (contentType === 'application/json') {
-
       data = await res.json();
-      container.textContent = JSON.stringify(data);
+      container.textContent = JSON.stringify(data, null, 4);
+    } else if (contentType.includes('image')) {
+      data = await res.blob();
+      const url = URL.createObjectURL(data);
+      image.src = url;
     } else if (contentType.includes('markdown')) {
       data = await res.text();
       container.textContent = data;
     } else if (contentType.includes('html')) {
       data = await res.text();
-
       container.insertAdjacentHTML('beforeend', data);
-
     } else {
       data = await res.text();
-
       container.textContent = data;
     }
 

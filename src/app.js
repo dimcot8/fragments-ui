@@ -5,7 +5,9 @@ import {
   getUserFragments,
   postFragment,
   getFragmentInfo,
-  getFragmentData
+  getFragmentData,
+  updateFragment,
+  deleteFragment
 
 } from './api';
 
@@ -24,6 +26,9 @@ async function init() {
   const fragmentId = document.querySelector('#fragment-id');
   const fragmentInput = document.querySelector('#inputfragment');
   const fragmentConvertId = document.querySelector('#fragment-id2');
+  const updateBtn = document.querySelector('#update-btn');
+  const deleteBtn = document.querySelector('#delete-btn');
+  const fragId = document.querySelector('#frag-id');
 
   const getDataBtn = document.querySelector('#get-data-btn');
   const convertType = document.querySelector('#convert-type');
@@ -82,12 +87,16 @@ async function init() {
     fragmData.style.display = 'block';
   });
   function extToType(ext) {
-    const extensions = ['txt', 'md', 'html', 'json'];
+    const extensions = ['txt', 'md', 'html', 'json', 'png', 'jpeg', 'webp', 'gif'];
     const types = [
       'text/plain',
       'text/markdown',
       'text/html',
-      'application/json'
+      'application/json',
+      'image/png',
+      'image/jpeg',
+      'image/webp',
+      'image/gif',
     ];
     const index = extensions.findIndex((extension) => extension === ext);
     return types[index];
@@ -96,18 +105,74 @@ async function init() {
   getFragmentsBtn.addEventListener('click', () => {
     getUserFragments(user, true);
   });
+
+  fragmentType.addEventListener('change', () => {
+    fileInput.accept = fragmentType.value;
+    fragmentInput.disabled = fragmentType.value.includes('image') ? true : false;
+  });
+
+
+  updateBtn.addEventListener('click', () => {
+    const id = fragId.value;
+    if (id === '') alert("Fragment ID can't be blank.");
+
+    if (fragmentType.value === '') {
+      alert('Please select a type');
+      return;
+    }
+
+    if (fileInput.files.length != 0) {
+      const file = fileInput.files[0];
+
+      console.log(file.type);
+      if (file.type !== fragmentType.value) {
+        alert('Please choose a file of selected type');
+        return;
+      }
+
+      if (fragmentType.value.includes('image')) {
+        updateFragment(user, id, file, fragmentType.value);
+        fileInput.value = null;
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fileData = e.target.result;
+        updateFragment(user, id, fileData, fragmentType.value);
+      };
+      reader.readAsText(file);
+
+      return;
+    }
+
+    if (fragmentInput.value === '') alert('Please enter a fragment');
+    else updateFragment(user, fragId.value, fragmentInput.value, fragmentType.value);
+  });
+
+  deleteBtn.addEventListener('click', () => {
+    deleteFragment(user, fragmentConvertId.value);
+  });
+
   postBtn.onclick = () => {
     if (fragmentType.value === '') {
       alert('Please select a type');
       return;
     }
-  
+
     if (fileInput.files.length != 0) {
       const file = fileInput.files[0];
       const name = file.name;
       var ext = name.substr(name.lastIndexOf('.') + 1, name.length);
+
       if (extToType(ext) !== fragmentType.value) {
         alert('Please choose a file of selected type');
+        return;
+      }
+
+      if (fragmentType.value.includes('image')) {
+        postFragment(user, file, fragmentType.value);
+        fileInput.value = null;
         return;
       }
 
@@ -117,12 +182,10 @@ async function init() {
         postFragment(user, fileData, fragmentType.value);
       };
       reader.readAsText(file);
+
       return;
     }
-  
-    if (fragmentInput === '') alert('Please enter a fragment!');
-    else postFragment(user, fragmentInput, fragmentType);
-  };
+  }
 
   getInfoBtn.addEventListener('click', () => {
     if (fragmentId.value === '' || fragmentId.value === null) alert("Fragment ID can't be blank!");
