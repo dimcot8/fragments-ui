@@ -1,10 +1,10 @@
 YouTube Video - https://www.youtube.com/watch?v=n9RBfHoPr_g
 
-•	Links to both private GitHub repos
+•	Links to both GitHub repos
 1.	Fragments - https://github.com/dimcot8/fragments
 2.	Fragments-ui - https://github.com/dimcot8/fragments-ui
 
-•	Links to your public Docker Hub repos
+•	Links to public Docker Hub repos
 o	https://hub.docker.com/repository/docker/dimcot8/fragments-ui/general
 o	https://hub.docker.com/repository/docker/dimcot8/fragments/general
 o	https://hub.docker.com/repositories/dimcot8
